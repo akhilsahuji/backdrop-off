@@ -1,0 +1,8 @@
+# Lightweight requirements for smaller executable
+customtkinter==5.2.2
+rembg==2.0.57
+Pillow==10.0.1
+# Use CPU-only ONNX Runtime (much smaller than GPU version)
+onnxruntime==1.16.3
+# Minimal numpy version
+numpy==1.24.4

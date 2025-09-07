@@ -52,6 +52,12 @@ jobs:
         pip install wheel setuptools
         pip install -r requirements.txt
         pip install pyinstaller
+        # Install UPX for better compression
+        if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+          sudo apt-get install -y upx-ucl
+        elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+          brew install upx
+        fi
 
     - name: Test imports (debug)
       run: |
@@ -69,7 +75,7 @@ jobs:
 
     - name: Build executable
       run: |
-        echo "Building with PyInstaller..."
+        echo "Building optimized executable with PyInstaller..."
         pyinstaller --onefile --windowed --name=Backdrop-Off \
           --hidden-import=customtkinter \
           --hidden-import=PIL._tkinter_finder \
@@ -82,6 +88,22 @@ jobs:
           --hidden-import=threading \
           --hidden-import=subprocess \
           --hidden-import=platform \
+          --exclude-module=matplotlib \
+          --exclude-module=scipy \
+          --exclude-module=pandas \
+          --exclude-module=jupyter \
+          --exclude-module=notebook \
+          --exclude-module=IPython \
+          --exclude-module=pytest \
+          --exclude-module=setuptools \
+          --exclude-module=distutils \
+          --exclude-module=unittest \
+          --exclude-module=sqlite3 \
+          --exclude-module=multiprocessing \
+          --exclude-module=asyncio \
+          --exclude-module=logging \
+          --strip \
+          --upx-dir=/usr/bin \
           --noconfirm \
           bg_remover_ui.py
       shell: bash
@@ -89,6 +111,20 @@ jobs:
     - name: List dist contents (debug)
       run: |
         ls -la dist/
+      shell: bash
+
+    - name: Show file size
+      run: |
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          echo "Windows executable size:"
+          ls -lh dist/Backdrop-Off.exe
+        elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+          echo "macOS executable size:"
+          ls -lh dist/Backdrop-Off-macOS
+        else
+          echo "Linux executable size:"
+          ls -lh dist/Backdrop-Off-Linux
+        fi
       shell: bash
 
     - name: Verify executable exists
