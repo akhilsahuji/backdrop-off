@@ -1,0 +1,50 @@
+name: Test Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  test-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]  # Start with just Linux for testing
+        
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk python3-dev
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel setuptools
+        echo "Installing requirements..."
+        cat requirements.txt
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Test imports
+      run: |
+        python -c "import customtkinter; print('CustomTkinter OK')"
+        python -c "import rembg; print('Rembg OK')"
+        python -c "import PIL; print('PIL OK')"
+        python -c "import onnxruntime; print('ONNXRuntime OK')"
+
+    - name: Test PyInstaller Analysis
+      run: |
+        pyinstaller --onefile --windowed --name=test-backdrop bg_remover_ui.py
+
+    - name: List output
+      run: |
+        ls -la dist/
