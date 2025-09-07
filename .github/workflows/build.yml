@@ -49,13 +49,57 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
+    - name: Test imports (debug)
+      run: |
+        python -c "import customtkinter; print('CustomTkinter OK')"
+        python -c "import rembg; print('Rembg OK')"
+        python -c "import PIL; print('PIL OK')"
+        python -c "import onnxruntime; print('ONNXRuntime OK')"
+
+    - name: List files (debug)
+      run: |
+        ls -la
+        echo "Looking for spec file..."
+        find . -name "*.spec" -type f
+      shell: bash
+
     - name: Build executable
       run: |
-        pyinstaller --clean --noconfirm backdrop-off.spec
+        echo "Building with PyInstaller..."
+        pyinstaller --onefile --windowed --name=Backdrop-Off \
+          --hidden-import=customtkinter \
+          --hidden-import=PIL._tkinter_finder \
+          --hidden-import=PIL.Image \
+          --hidden-import=rembg \
+          --hidden-import=onnxruntime \
+          --hidden-import=tkinter.colorchooser \
+          --hidden-import=tkinter.filedialog \
+          --hidden-import=tkinter.messagebox \
+          --hidden-import=threading \
+          --hidden-import=subprocess \
+          --hidden-import=platform \
+          --noconfirm \
+          bg_remover_ui.py
+      shell: bash
 
     - name: List dist contents (debug)
       run: |
         ls -la dist/
+      shell: bash
+
+    - name: Verify executable exists
+      run: |
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          if [ ! -f "dist/Backdrop-Off.exe" ]; then
+            echo "Windows executable not found!"
+            exit 1
+          fi
+        else
+          if [ ! -f "dist/Backdrop-Off" ]; then
+            echo "Unix executable not found!"
+            exit 1
+          fi
+        fi
       shell: bash
 
     - name: Upload build artifacts
