@@ -106,6 +106,20 @@ jobs:
         fi
       shell: bash
 
+    - name: Rename executables for release
+      run: |
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          echo "Windows executable: dist/Backdrop-Off.exe"
+        elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+          mv dist/Backdrop-Off dist/Backdrop-Off-macOS
+          echo "macOS executable renamed to: dist/Backdrop-Off-macOS"
+        else
+          mv dist/Backdrop-Off dist/Backdrop-Off-Linux
+          echo "Linux executable renamed to: dist/Backdrop-Off-Linux"
+        fi
+        ls -la dist/
+      shell: bash
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -133,8 +147,8 @@ jobs:
       with:
         files: |
           artifacts/backdrop-off-windows/Backdrop-Off.exe
-          artifacts/backdrop-off-macos/Backdrop-Off
-          artifacts/backdrop-off-linux/Backdrop-Off
+          artifacts/backdrop-off-macos/Backdrop-Off-macOS
+          artifacts/backdrop-off-linux/Backdrop-Off-Linux
         generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
