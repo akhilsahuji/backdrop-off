@@ -129,11 +129,8 @@ The executable will be created in the `dist/` folder.
 
 - [ ] Drag & drop support
 - [ ] Batch rename options
-- [ ] Multiple AI models support
-- [ ] Image preview before processing
 - [ ] Custom output formats (PNG with transparency)
 - [ ] Image quality settings
-- [ ] Multi-language support
 
 ## Troubleshooting
 
