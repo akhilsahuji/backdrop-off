@@ -3,8 +3,8 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'  # Triggers on version tags like v1.0.0
-  workflow_dispatch:  # Allows manual triggering
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,14 +14,14 @@ jobs:
         os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
+            platform: windows
             executable: Backdrop-Off.exe
-            asset_name: Backdrop-Off-Windows
           - os: macos-latest
+            platform: macos
             executable: Backdrop-Off
-            asset_name: Backdrop-Off-macOS
           - os: ubuntu-latest
+            platform: linux
             executable: Backdrop-Off
-            asset_name: Backdrop-Off-Linux
 
     steps:
     - uses: actions/checkout@v4
@@ -41,39 +41,32 @@ jobs:
       run: |
         pyinstaller backdrop-off.spec
 
-    - name: Rename executable (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        move dist\Backdrop-Off.exe dist\${{ matrix.asset_name }}.exe
-
-    - name: Rename executable (Unix)
-      if: matrix.os != 'windows-latest'
-      run: |
-        mv dist/Backdrop-Off dist/${{ matrix.asset_name }}
-
-    - name: Upload artifacts
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.asset_name }}
-        path: dist/${{ matrix.asset_name }}*
+        name: backdrop-off-${{ matrix.platform }}
+        path: dist/
 
   release:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-
+    
     steps:
+    - uses: actions/checkout@v4
+
     - name: Download all artifacts
       uses: actions/download-artifact@v3
+      with:
+        path: ./artifacts
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          */Backdrop-Off-Windows.exe
-          */Backdrop-Off-macOS
-          */Backdrop-Off-Linux
-        draft: false
-        prerelease: false
+          artifacts/backdrop-off-windows/Backdrop-Off.exe
+          artifacts/backdrop-off-macos/Backdrop-Off
+          artifacts/backdrop-off-linux/Backdrop-Off
+        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
