@@ -18,7 +18,8 @@ A simple and powerful desktop application for removing backgrounds from images w
 
 ## Screenshots
 
-*Add screenshots of your application here*
+<img width="702" height="531" alt="image" src="https://github.com/user-attachments/assets/aba179f2-6e31-406f-8bc7-cf330fae9712" />
+
 
 ## Installation
 
@@ -129,11 +130,8 @@ The executable will be created in the `dist/` folder.
 
 - [ ] Drag & drop support
 - [ ] Batch rename options
-- [ ] Multiple AI models support
-- [ ] Image preview before processing
 - [ ] Custom output formats (PNG with transparency)
 - [ ] Image quality settings
-- [ ] Multi-language support
 
 ## Troubleshooting
 
