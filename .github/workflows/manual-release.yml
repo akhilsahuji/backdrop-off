@@ -1,17 +1,23 @@
-name: Build and Release
+name: Manual Release
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.1)'
+        required: true
+        default: 'v1.0.1'
+      prerelease:
+        description: 'Mark as pre-release'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
   actions: read
-  
+
 jobs:
-  build:
+  build-and-release:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -53,20 +59,6 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Test imports (debug)
-      run: |
-        python -c "import customtkinter; print('CustomTkinter OK')"
-        python -c "import rembg; print('Rembg OK')"
-        python -c "import PIL; print('PIL OK')"
-        python -c "import onnxruntime; print('ONNXRuntime OK')"
-
-    - name: List files (debug)
-      run: |
-        ls -la
-        echo "Looking for spec file..."
-        find . -name "*.spec" -type f
-      shell: bash
-
     - name: Build executable
       run: |
         echo "Building with PyInstaller..."
@@ -86,36 +78,15 @@ jobs:
           bg_remover_ui.py
       shell: bash
 
-    - name: List dist contents (debug)
-      run: |
-        ls -la dist/
-      shell: bash
-
-    - name: Verify executable exists
-      run: |
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          if [ ! -f "dist/Backdrop-Off.exe" ]; then
-            echo "Windows executable not found!"
-            exit 1
-          fi
-        else
-          if [ ! -f "dist/Backdrop-Off" ]; then
-            echo "Unix executable not found!"
-            exit 1
-          fi
-        fi
-      shell: bash
-
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: backdrop-off-${{ matrix.platform }}
-        path: dist/
+        path: dist/${{ matrix.executable }}
 
-  release:
-    needs: build
+  create-release:
+    needs: build-and-release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
       actions: read
@@ -128,13 +99,39 @@ jobs:
       with:
         path: ./artifacts
 
+    - name: List artifacts (debug)
+      run: |
+        find ./artifacts -type f -exec ls -la {} \;
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: ${{ github.event.inputs.version }}
+        name: Backdrop-Off ${{ github.event.inputs.version }}
+        body: |
+          ## Backdrop-Off Release ${{ github.event.inputs.version }}
+          
+          ### Downloads
+          - **Windows**: Download `Backdrop-Off.exe`
+          - **macOS**: Download `Backdrop-Off` (macOS executable)
+          - **Linux**: Download `Backdrop-Off` (Linux executable)
+          
+          ### Features
+          - AI-powered background removal
+          - Custom background color selection
+          - Batch processing
+          - Progress tracking
+          - Cross-platform support
+          
+          ### Installation
+          Simply download the executable for your platform and run it - no Python installation required!
+          
+          Built from commit: ${{ github.sha }}
         files: |
           artifacts/backdrop-off-windows/Backdrop-Off.exe
           artifacts/backdrop-off-macos/Backdrop-Off
           artifacts/backdrop-off-linux/Backdrop-Off
-        generate_release_notes: true
+        prerelease: ${{ github.event.inputs.prerelease }}
+        generate_release_notes: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
