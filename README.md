@@ -1,4 +1,4 @@
-# Backdrop-Off - Background Remover
+# Backdrop-Off - Bulk Background Remover
 
 A simple and powerful desktop application for removing backgrounds from images with custom background color options.
 
