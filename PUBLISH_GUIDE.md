@@ -42,8 +42,8 @@ python bg_remover_ui.py
 
 ### 2.2 Connect Local Repository to GitHub
 ```bash
-# Add remote origin (replace 'yourusername' with your GitHub username)
-git remote add origin https://github.com/yourusername/backdrop-off.git
+# Add remote origin (replace 'akhilsahuji' with your GitHub username)
+git remote add origin https://github.com/akhilsahuji/backdrop-off.git
 
 # Push to GitHub
 git branch -M main
@@ -92,7 +92,7 @@ chmod +x build.sh
 ## Step 5: Customize Your Repository
 
 ### 5.1 Update README.md
-- Replace `yourusername` with your actual GitHub username
+- Replace `akhilsahuji` with your actual GitHub username
 - Add screenshots of your application
 - Update contact information
 

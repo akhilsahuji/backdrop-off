@@ -30,7 +30,7 @@ A simple and powerful desktop application for removing backgrounds from images w
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/backdrop-off.git
+   git clone https://github.com/akhilsahuji/backdrop-off.git
    cd backdrop-off
    ```
 
@@ -46,7 +46,7 @@ A simple and powerful desktop application for removing backgrounds from images w
 
 ### Method 2: Download Executable (Coming Soon)
 
-Pre-built executables for Windows, macOS, and Linux will be available in the [Releases](https://github.com/yourusername/backdrop-off/releases) section.
+Pre-built executables for Windows, macOS, and Linux will be available in the [Releases](https://github.com/akhilsahuji/backdrop-off/releases) section.
 
 ## Usage
 
@@ -76,7 +76,7 @@ Pre-built executables for Windows, macOS, and Linux will be available in the [Re
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/backdrop-off.git
+   git clone https://github.com/akhilsahuji/backdrop-off.git
    cd backdrop-off
    ```
 
@@ -166,7 +166,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 If you encounter any issues or have questions:
-1. Check the [Issues](https://github.com/yourusername/backdrop-off/issues) page
+1. Check the [Issues](https://github.com/akhilsahuji/backdrop-off/issues) page
 2. Create a new issue with detailed description
 3. Include your OS, Python version, and error messages
 
