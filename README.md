@@ -45,7 +45,7 @@ A simple and powerful desktop application for removing backgrounds from images w
    python bg_remover_ui.py
    ```
 
-### Method 2: Download Executable (Coming Soon)
+### Method 2: Download Executable
 
 Pre-built executables for Windows, macOS, and Linux will be available in the [Releases](https://github.com/akhilsahuji/backdrop-off/releases) section.
 
