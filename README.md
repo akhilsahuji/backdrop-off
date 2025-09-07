@@ -18,7 +18,8 @@ A simple and powerful desktop application for removing backgrounds from images w
 
 ## Screenshots
 
-*Add screenshots of your application here*
+<img width="702" height="531" alt="image" src="https://github.com/user-attachments/assets/aba179f2-6e31-406f-8bc7-cf330fae9712" />
+
 
 ## Installation
 
